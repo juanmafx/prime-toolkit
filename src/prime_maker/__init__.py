@@ -5,7 +5,7 @@ from prime_maker.core.generation import random_prime
 from prime_maker.core.primality import Primality, classify, is_prime
 from prime_maker.core.sieve import iter_primes, primes_up_to
 
-__version__ = "2.0.0"
+__version__ = "2.0.1"
 
 __all__ = [
     "Primality",

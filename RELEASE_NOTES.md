@@ -1,25 +1,15 @@
-# Release Notes: 2.0.0
+# Release Notes: 2.0.1
 
-Status: prepared and not yet tagged or published.
+Documentation-only patch release. Code behaviour is unchanged from 2.0.0.
 
-Version 2.0.0 turns two 2019 study scripts into a tested, documented prime-number toolkit.
+## Changes
 
-## Highlights
-
-- Primality results state whether they are proven or probabilistic.
-- Primes can be streamed from ranges up to 10^15 and counted up to 10^13.
-- Generated primes have an exact bit length and can be reproduced with a seed.
-- Range reports cover gaps, twin primes, density, and residue classes.
-- The Python package has no runtime dependencies.
+- The changelog and these notes now reflect that 2.0.0 is published as a tagged GitHub release.
+- The public Git history was rewritten on 2026-11-24 and now contains only the 2026 modernization. The 2019 scripts are no longer in any branch or tag.
 
 ## Upgrading
 
-| Before | After |
-| --- | --- |
-| `python primer_maker.py` | `uv run prime-maker count 99` |
-| `node index.js` | `node javascript/src/cli.js 10000` |
-
-The JavaScript command now prints only the prime on each line. Values 0 and 1 are no longer listed as prime.
+No action is needed when upgrading from 2.0.0. The command changes from the 2019 scripts are listed in [CHANGELOG.md](CHANGELOG.md) under 2.0.0.
 
 ## Verification
 

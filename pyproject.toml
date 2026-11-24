@@ -1,6 +1,6 @@
 [project]
 name = "prime-maker"
-version = "2.0.0"
+version = "2.0.1"
 description = "Prime testing, sieving, counting, generation, and distribution analysis."
 readme = "README.md"
 requires-python = ">=3.13"

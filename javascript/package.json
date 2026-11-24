@@ -1,6 +1,6 @@
 {
   "name": "prime-maker-js",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Dependency-free JavaScript port of the prime-maker primality test and sieve.",
   "private": true,
   "type": "module",

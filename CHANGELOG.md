@@ -2,7 +2,15 @@
 
 This project follows [Semantic Versioning](https://semver.org/). The 2019 scripts were never versioned and are treated as the 1.x line.
 
-## 2.0.0 - Unreleased (prepared 2026-11-23)
+## 2.0.1 - 2026-11-24
+
+Documentation corrections only. No change to code behaviour.
+
+### Changed
+
+- Release notes and changelog now reflect that 2.0.0 is published and that the public Git history was rewritten on 2026-11-24 to keep only the 2026 modernization.
+
+## 2.0.0 - 2026-11-24
 
 ### Added
 

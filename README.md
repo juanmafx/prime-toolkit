@@ -147,4 +147,4 @@ The suites cover known values of the prime-counting function, Carmichael numbers
 
 ## Release and license
 
-The current version is 2.0.0. See [CHANGELOG.md](CHANGELOG.md) and [RELEASE_NOTES.md](RELEASE_NOTES.md). The repository has never included a license file, so no open-source license is granted at this time.
+The current version is 2.0.1. See [CHANGELOG.md](CHANGELOG.md) and [RELEASE_NOTES.md](RELEASE_NOTES.md). The repository has never included a license file, so no open-source license is granted at this time.
