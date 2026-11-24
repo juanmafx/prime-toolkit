@@ -1,0 +1,11 @@
+{
+  "name": "prime-maker-js",
+  "version": "2.0.0",
+  "description": "Dependency-free JavaScript port of the prime-maker primality test and sieve.",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "bin": { "prime-maker-js": "src/cli.js" },
+  "exports": "./src/primes.js",
+  "scripts": { "test": "node --test \"test/**/*.test.js\"" }
+}

@@ -1,0 +1,52 @@
+[project]
+name = "prime-maker"
+version = "2.0.0"
+description = "Prime testing, sieving, counting, generation, and distribution analysis."
+readme = "README.md"
+requires-python = ">=3.13"
+authors = [{ name = "Juan Manuel Ramallo" }]
+dependencies = []
+
+[project.scripts]
+prime-maker = "prime_maker.cli.app:main"
+
+[dependency-groups]
+dev = [
+    "hypothesis==6.170.17",
+    "mypy==2.4.1",
+    "pytest==9.2.0",
+    "pytest-cov==7.1.0",
+    "ruff==0.17.6",
+]
+
+[build-system]
+requires = ["uv_build==0.13.9"]
+build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+addopts = "--import-mode=importlib --strict-markers"
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["prime_maker"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "C4", "SIM", "RUF", "PL"]
+ignore = ["PLR2004"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S311", "S603"]
+"src/prime_maker/core/generation.py" = ["S311"]
+"src/prime_maker/cli/app.py" = ["S311"]
+"scripts/**" = ["S603", "S607", "S314"]
+
+[tool.mypy]
+strict = true
+files = ["src", "scripts"]
