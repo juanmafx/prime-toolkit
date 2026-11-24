@@ -13,4 +13,4 @@ Please use GitHub private vulnerability reporting on this repository if it is av
 
 ## Scope and intended use
 
-This project is a study and research tool. It must not be used to generate production cryptographic keys: it has not been audited, its arithmetic is not constant-time, and seeded runs are deterministic by design.
+This project is a study and research tool. It must not be used to generate production cryptographic keys: it has not been independently audited, its arithmetic is not constant-time, and seeded runs are deterministic by design.

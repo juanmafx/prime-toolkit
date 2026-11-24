@@ -1,6 +1,7 @@
 import json
 import os
 import sqlite3
+import stat
 from dataclasses import dataclass
 from importlib.resources import files
 from pathlib import Path
@@ -19,17 +20,37 @@ class RunRecord:
     duration_ms: float
 
 
-def _ensure_private_file(path: Path) -> None:
-    descriptor = os.open(path, os.O_RDWR | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0), 0o600)
-    os.close(descriptor)
+def _open_regular_file(path: Path) -> int:
+    flags = os.O_RDWR | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0)
+    descriptor = os.open(path, flags, 0o600)
+    if not stat.S_ISREG(os.fstat(descriptor).st_mode):
+        os.close(descriptor)
+        raise ValueError("database path must be a regular file")
+    return descriptor
+
+
+def _connect(path: Path, descriptor: int) -> sqlite3.Connection:
+    connection = sqlite3.connect(path)
+    try:
+        if not os.path.samestat(os.fstat(descriptor), os.lstat(path)):
+            raise ValueError("database path changed while opening")
+        connection.setconfig(sqlite3.SQLITE_DBCONFIG_DEFENSIVE, True)
+        connection.execute("PRAGMA trusted_schema = OFF")
+        schema = files("prime_maker.storage").joinpath("schema.sql").read_text(encoding="utf-8")
+        connection.executescript(schema)
+    except BaseException:
+        connection.close()
+        raise
+    return connection
 
 
 class RunStore:
     def __init__(self, path: Path) -> None:
-        _ensure_private_file(path)
-        self._connection = sqlite3.connect(path)
-        schema = files("prime_maker.storage").joinpath("schema.sql").read_text(encoding="utf-8")
-        self._connection.executescript(schema)
+        descriptor = _open_regular_file(path)
+        try:
+            self._connection = _connect(path, descriptor)
+        finally:
+            os.close(descriptor)
 
     def __enter__(self) -> Self:
         return self

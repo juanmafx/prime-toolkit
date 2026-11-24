@@ -24,3 +24,11 @@ This project follows [Semantic Versioning](https://semver.org/). The 2019 script
 
 - Negative integers are no longer reported as prime in Python.
 - 0 and 1 are no longer reported as prime in JavaScript.
+- `logarithmic_integral` rejects infinity, NaN, and values beyond the float range instead of never returning.
+- `--db` rejects non-regular files and reports storage errors before the command runs.
+
+### Security
+
+- SQLite connections run with `trusted_schema` off and defensive mode on.
+- A database path replaced by a symbolic link while opening is refused.
+- The `primes_up_to` library limit is lowered from 10^10 to 10^9 to bound memory use.

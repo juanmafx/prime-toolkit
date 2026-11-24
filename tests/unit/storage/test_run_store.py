@@ -1,3 +1,4 @@
+import os
 import sqlite3
 import stat
 from pathlib import Path
@@ -43,6 +44,45 @@ def test_refuses_symbolic_link(tmp_path):
     link.symlink_to(target)
     with pytest.raises(OSError):
         RunStore(link)
+
+
+def test_refuses_named_pipe(tmp_path):
+    pipe = tmp_path / "runs.fifo"
+    os.mkfifo(pipe)
+    with pytest.raises(ValueError, match="regular file"):
+        RunStore(pipe)
+
+
+def test_refuses_path_swapped_for_symbolic_link(tmp_path, monkeypatch):
+    path = tmp_path / "runs.sqlite"
+    target = tmp_path / "target.sqlite"
+    target.write_bytes(b"")
+    original_connect = sqlite3.connect
+
+    def swap_then_connect(database):
+        path.unlink()
+        path.symlink_to(target)
+        return original_connect(database)
+
+    monkeypatch.setattr("prime_maker.storage.run_store.sqlite3.connect", swap_then_connect)
+    with pytest.raises(ValueError, match="changed"):
+        RunStore(path)
+    assert target.read_bytes() == b""
+
+
+def test_existing_file_mode_is_not_changed(tmp_path):
+    path = tmp_path / "runs.sqlite"
+    RunStore(path).close()
+    path.chmod(0o640)
+    RunStore(path).close()
+    assert stat.S_IMODE(path.stat().st_mode) == 0o640
+
+
+def test_connection_does_not_trust_database_schema(tmp_path):
+    with RunStore(tmp_path / "runs.sqlite") as store:
+        connection = store._connection
+        assert connection.execute("PRAGMA trusted_schema").fetchone() == (0,)
+        assert connection.getconfig(sqlite3.SQLITE_DBCONFIG_DEFENSIVE) is True
 
 
 def test_values_are_bound_not_interpolated(tmp_path):

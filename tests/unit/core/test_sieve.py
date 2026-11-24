@@ -1,3 +1,5 @@
+from math import isqrt
+
 import pytest
 
 from prime_maker.core.limits import MAX_RANGE_HIGH, MAX_RANGE_SPAN, MAX_SIEVE_LIMIT
@@ -70,3 +72,7 @@ def test_iter_primes_rejects_invalid_bounds_eagerly(low, high):
 def test_primes_up_to_rejects_invalid_limit(limit):
     with pytest.raises(ValueError):
         primes_up_to(limit)
+
+
+def test_full_sieve_limit_is_bounded_and_covers_segment_base_primes():
+    assert isqrt(MAX_RANGE_HIGH) <= MAX_SIEVE_LIMIT <= 10**9

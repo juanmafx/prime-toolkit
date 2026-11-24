@@ -130,6 +130,11 @@ def test_unwritable_db_path_reports_error(tmp_path, capsys):
     assert capsys.readouterr().err.startswith("error: ")
 
 
+def test_unusable_db_fails_before_running_command(tmp_path, capsys):
+    assert main(["--db", str(tmp_path / "missing" / "x.sqlite"), "count", "10"]) == 2
+    assert capsys.readouterr().out == ""
+
+
 def test_module_entry_point_survives_closed_pipe():
     environment = {**os.environ, "PYTHONPATH": SOURCE}
     process = subprocess.Popen(

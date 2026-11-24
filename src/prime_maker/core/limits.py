@@ -1,7 +1,7 @@
 from typing import Final
 
 MAX_INPUT_BITS: Final = 4096
-MAX_SIEVE_LIMIT: Final = 10**10
+MAX_SIEVE_LIMIT: Final = 10**9
 MAX_RANGE_HIGH: Final = 10**15
 MAX_RANGE_SPAN: Final = 10**9
 MAX_COUNT_LIMIT: Final = 10**13

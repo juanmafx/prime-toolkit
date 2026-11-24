@@ -96,7 +96,7 @@ Only the `O(sqrt(n))` distinct values of `floor(n / i)` are needed, which yields
 
 ## Persistence
 
-SQLite is optional and is used only with `--db`. The `runs` table keeps JSON parameters and results, the seed, the package version, and timing. Constraints reject unknown commands and malformed JSON. `db/schema.sql` is canonical, and a test ensures the packaged copy is identical.
+SQLite is optional and is used only with `--db`. The `runs` table keeps JSON parameters and results, the seed, the package version, and timing. Constraints reject unknown commands and malformed JSON. The store opens only regular files, refuses symbolic links where the platform supports it, and connects with `trusted_schema` off and defensive mode on. The store is opened before the command runs, so an unusable path fails without doing the work. `db/schema.sql` is canonical, and a test ensures the packaged copy is identical.
 
 ## Recommended evolution
 

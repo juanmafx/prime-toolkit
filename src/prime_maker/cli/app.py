@@ -127,25 +127,31 @@ HANDLERS = {
 }
 
 
-def _execute(args: argparse.Namespace) -> int:
+def _run_command(args: argparse.Namespace, store: RunStore | None) -> int:
     started_at = datetime.now(UTC).isoformat()
     started = time.perf_counter()
     exit_code, parameters, result = HANDLERS[args.command](args)
     duration_ms = (time.perf_counter() - started) * 1000
-    if args.db is not None:
-        with RunStore(args.db) as store:
-            store.record(
-                RunRecord(
-                    command=args.command,
-                    parameters=parameters,
-                    result=result,
-                    seed=getattr(args, "seed", None),
-                    package_version=__version__,
-                    started_at=started_at,
-                    duration_ms=duration_ms,
-                )
+    if store is not None:
+        store.record(
+            RunRecord(
+                command=args.command,
+                parameters=parameters,
+                result=result,
+                seed=getattr(args, "seed", None),
+                package_version=__version__,
+                started_at=started_at,
+                duration_ms=duration_ms,
             )
+        )
     return exit_code
+
+
+def _execute(args: argparse.Namespace) -> int:
+    if args.db is None:
+        return _run_command(args, None)
+    with RunStore(args.db) as store:
+        return _run_command(args, store)
 
 
 def main(argv: Sequence[str] | None = None) -> int:

@@ -20,3 +20,9 @@ def test_matches_reference_values(value, expected):
 def test_rejects_domain_errors(value):
     with pytest.raises(ValueError):
         logarithmic_integral(value)
+
+
+@pytest.mark.parametrize("value", [float("inf"), float("nan"), 10**400])
+def test_rejects_values_without_a_finite_result(value):
+    with pytest.raises(ValueError):
+        logarithmic_integral(value)

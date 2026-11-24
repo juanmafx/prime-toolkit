@@ -1,6 +1,6 @@
 # prime_maker_py
 
-A dependency-free Python toolkit, with a small JavaScript port, for testing primality, enumerating and counting primes, generating primes of an exact bit length, and measuring how primes are distributed.
+A Python toolkit with no runtime dependencies, plus a small JavaScript port, for testing primality, enumerating and counting primes, generating primes of an exact bit length, and measuring how primes are distributed.
 
 > **Project history:** originally created in 2019, modernized in 2026.
 
@@ -18,7 +18,7 @@ The project answers five concrete questions about integers:
 
 ## Why this project exists
 
-It began in 2019 as two short study scripts that used trial division: one counted the primes below 100 and the other printed the primes below 10,000. Prime numbers are a compact way to study the trade-offs between proof and probability, time and memory, and exact and estimated answers. Version 2 keeps that study focus and replaces the original scripts with algorithms that have documented bounds, verified edge cases, and reproducible runs.
+It began in 2019 as two short scripts that used trial division: one counted the primes below 100 and the other printed the primes below 10,000. Prime numbers are a compact way to study the trade-offs between proof and probability, time and memory, and exact and estimated answers. Version 2 replaces the original scripts with algorithms that have documented complexity, tested edge cases, and repeatable seeded runs.
 
 ## Architecture
 
@@ -71,7 +71,7 @@ uv run prime-maker --db runs.sqlite count 1000
 | Classification | Meaning |
 | --- | --- |
 | `proven_prime` | Prime. The input is below 3,317,044,064,679,887,385,961,981, where the 13 fixed bases are known to be sufficient. |
-| `probable_prime` | Passed the fixed bases and every random round. A composite passes `k` independent random rounds with probability at most `4^-k`. |
+| `probable_prime` | Passed the fixed bases and every random round. With operating system randomness, a composite passes `k` rounds with probability at most `4^-k`. Seeded runs are for repeatability and do not carry that bound. |
 | `not_prime` | Composite, or less than 2. |
 
 Exit codes: `0` success, `1` when `check` finds a non-prime, and `2` for invalid input or a storage error.
@@ -99,7 +99,7 @@ The port exports `isPrime` and `primesBelow` from `javascript/src/primes.js`. It
 
 ## Configuration
 
-There are no environment variables or configuration files. Behavior is set through command options, and these input limits are defined in `src/prime_maker/core/limits.py`:
+There are no environment variables or configuration files. Behavior is set through command options, and these input limits apply:
 
 | Limit | Value |
 | --- | --- |
@@ -108,6 +108,9 @@ There are no environment variables or configuration files. Behavior is set throu
 | Upper bound for `list` and `analyze` | 10^15 |
 | Width of a `list` or `analyze` range | 10^9 |
 | Limit for `count` | 10^13 |
+| Modulus for `analyze` | 2 to 10,000 |
+| CLI `--seed` | 0 to 2^63 - 1 |
+| Limit for the `primes_up_to` library function | 10^9 |
 | Limit for the JavaScript sieve | 10^8 |
 
 ## Reproducibility
@@ -116,7 +119,7 @@ Pass `--seed` to `check` or `random`, or `seed=` to `random_prime`, to repeat a 
 
 ## Database (optional)
 
-The toolkit does not need a database. Persistence is used only when `--db PATH` is passed. [db/schema.sql](db/schema.sql) defines a small SQLite table of run results, and the CLI applies it automatically. The file is created with owner-only permissions.
+The toolkit does not need a database. Persistence is used only when `--db PATH` is passed. [db/schema.sql](db/schema.sql) defines a small SQLite table of run results, and the CLI applies it automatically. The path must be a regular file. A new file is created with owner-only permissions on POSIX systems, and the mode of an existing file is left unchanged. Keep the database in a directory that other users cannot write to.
 
 ## Testing
 
@@ -131,9 +134,9 @@ The suites cover known values of the prime-counting function, Carmichael numbers
 
 ## Security notes
 
-- **Do not use this project to generate cryptographic keys.** It is a study tool, has not been audited, and its arithmetic is not constant-time.
-- All CLI inputs are bounded to limit resource exhaustion.
-- SQL statements use bound parameters, and the optional database file refuses symbolic links where the platform supports it.
+- **Do not use this project to generate cryptographic keys.** It has not been independently audited, and its arithmetic is not constant-time.
+- CLI inputs have explicit size limits, but the largest permitted inputs can still take minutes of CPU time. Add a timeout before exposing the tool to untrusted input.
+- SQL statements use bound parameters. The optional database path refuses symbolic links where the platform supports it and rejects non-regular files, and SQLite runs with `trusted_schema` off and defensive mode on.
 - See [SECURITY.md](SECURITY.md) and [docs/SECURITY_AUDIT.md](docs/SECURITY_AUDIT.md).
 
 ## References
