@@ -1,4 +1,4 @@
-# prime_maker_py
+# prime-toolkit
 
 A Python toolkit with no runtime dependencies, plus a small JavaScript port, for testing primality, enumerating and counting primes, generating primes of an exact bit length, and measuring how primes are distributed.
 
@@ -42,7 +42,7 @@ Requirements: Python 3.13 or newer and [uv](https://docs.astral.sh/uv/). Node.js
 
 ```bash
 git clone https://github.com/juanmafx/prime_maker_py.git
-cd prime_maker_py
+cd prime-toolkit
 uv sync --locked
 uv run prime-maker check 97
 ```
