@@ -41,7 +41,7 @@ Dependencies point inward: `cli` uses `analysis`, `core`, and `storage`; `analys
 Requirements: Python 3.13 or newer and [uv](https://docs.astral.sh/uv/). Node.js 22 or newer is needed only for the JavaScript port.
 
 ```bash
-git clone https://github.com/juanmafx/prime_maker_py.git
+git clone https://github.com/juanmafx/prime-toolkit.git
 cd prime-toolkit
 uv sync --locked
 uv run prime-maker check 97
